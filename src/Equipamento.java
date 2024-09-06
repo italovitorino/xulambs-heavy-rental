@@ -49,6 +49,9 @@ public class Equipamento {
    *         {@code false} se indisponível.
    */
   public boolean estaDisponivelEm(LocalDate data) {
+    if (inicioAluguel == null) 
+      return true;
+
     LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel);
     return fimAluguel.isBefore(data);
   }
@@ -66,7 +69,7 @@ public class Equipamento {
    *         permitido.
    */
   public boolean alugar(LocalDate inicio, int duracaoAluguel) {
-    if (duracaoAluguel <= this.duracaoMaxima && estaDisponivelEm(inicio)) {
+    if (duracaoAluguel > 0 && duracaoAluguel <= this.duracaoMaxima && estaDisponivelEm(inicio)) {
       this.inicioAluguel = inicio;
       this.duracaoAluguel = duracaoAluguel;
       this.totalArrecadado += valorDiaria * duracaoAluguel;
