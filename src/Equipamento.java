@@ -21,23 +21,23 @@ public class Equipamento {
   private double totalArrecadado;
 
   /**
-   * Cria um novo equipamento com um identificador único e configurações iniciais.
-   * O equipamento é criado apenas se todos os parâmetros forem válidos.
-   * 
-   * @param descricao     Descrição do equipamento, deve ter no mínimo 5
+   * Construtor para criar um novo equipamento. Se os parâmetros forem inválidos,
+   * serão aplicados valores padrão:
+   * - Descrição: "Equipamento" (se tiver menos de 5 caracteres)
+   * - Valor da diária: 10 (se for menor ou igual a 0)
+   * - Duração máxima: 7 (se for menor ou igual a 0)
+   *
+   * @param descricao     Descrição do equipamento, deve ter pelo menos 5
    *                      caracteres.
-   * @param diaria        Valor da diária do equipamento, deve ser maior que 0.
-   * @param duracaoMaxima Duração máxima permitida para o aluguel, deve ser maior
-   *                      que 0.
+   * @param diaria        Valor da diária, deve ser maior que 0.
+   * @param duracaoMaxima Duração máxima do aluguel, deve ser maior que 0.
    */
   public Equipamento(String descricao, double diaria, int duracaoMaxima) {
-    if (descricao.length() >= 5 && diaria > 0 && duracaoMaxima > 0) {
-      this.id = ++ultimoId;
-      this.descricao = descricao;
-      this.duracaoMaxima = duracaoMaxima;
-      this.valorDiaria = diaria;
-      this.totalArrecadado = 0d;
-    }
+    this.id = ++ultimoId;
+    this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
+    this.valorDiaria = (diaria > 0) ? diaria : 10d;
+    this.duracaoMaxima = (duracaoMaxima > 0) ? duracaoMaxima : 7;
+    this.totalArrecadado = 0d;
   }
 
   /**
@@ -49,7 +49,7 @@ public class Equipamento {
    *         {@code false} se indisponível.
    */
   public boolean estaDisponivelEm(LocalDate data) {
-    if (inicioAluguel == null) 
+    if (inicioAluguel == null)
       return true;
 
     LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel);
@@ -62,11 +62,12 @@ public class Equipamento {
    * atendidas.
    *
    * @param inicio         Data de início do aluguel.
-   * @param duracaoAluguel Duração do aluguel em dias. Deve ser menor ou igual à
-   *                       duração máxima permitida pelo equipamento.
+   * @param duracaoAluguel Duração do aluguel em dias. Deve ser maior que 0 e
+   *                       menor ou igual à duração máxima permitida pelo
+   *                       equipamento.
    * @return {@code true} se o aluguel for realizado com sucesso; {@code false} se
-   *         o equipamento não estiver disponível ou se a duração exceder o limite
-   *         permitido.
+   *         o equipamento não estiver disponível ou se a duração do aluguel é
+   *         inválida.
    */
   public boolean alugar(LocalDate inicio, int duracaoAluguel) {
     if (duracaoAluguel > 0 && duracaoAluguel <= this.duracaoMaxima && estaDisponivelEm(inicio)) {
@@ -101,8 +102,7 @@ public class Equipamento {
 
     relatEquipamento.append(String.format("Descrição: %s\n", descricao));
     relatEquipamento.append(String.format("Valor da diária: %s\n", moeda.format(valorDiaria)));
-    relatEquipamento
-        .append(String.format("Última locação: %s - %s\n", inicioAluguel, inicioAluguel.plusDays(duracaoAluguel)));
+    relatEquipamento.append(inicioAluguel == null ? "Última locação: Sem registro!" : String.format("Última locação: %s - %s\n", inicioAluguel, inicioAluguel.plusDays(duracaoAluguel)));
     relatEquipamento.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));
 
     return relatEquipamento.toString();
