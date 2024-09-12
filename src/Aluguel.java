@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 
 public class Aluguel {
-  
+
   private LocalDate inicioAluguel;
   private int duracaoAluguel;
   private Equipamento equipamento;
@@ -17,16 +17,14 @@ public class Aluguel {
   }
 
   public String relatorio() {
-
+    //
   }
 
   public boolean incluiData(LocalDate data) {
     if (inicioAluguel == null)
       return false;
-      
+
     LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel);
-    return fimAluguel.isAfter(data);
+    return !data.isBefore(inicioAluguel) && !data.isAfter(fimAluguel);
   }
-
 }
-

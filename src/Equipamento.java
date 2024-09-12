@@ -32,14 +32,15 @@ public class Equipamento {
    *                      caracteres.
    * @param diaria        Valor da diária, deve ser maior que 0.
    * @param duracaoMaxima Duração máxima do aluguel, deve ser maior que 0.
-   * @param desconto      Desconto, em porcentagem, se determinado aluguel passar de 7 dias. Deve estar entre 0 e 10.
+   * @param desconto      Desconto, em porcentagem, se determinado aluguel passar
+   *                      de 7 dias. Deve estar entre 0 e 10.
    */
   public Equipamento(String descricao, double diaria, int duracaoMaxima, double desconto) {
     this.id = ++ultimoId;
     this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
     this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
-    this.descontoSemanal = desconto > 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
+    this.descontoSemanal = desconto >= 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
     this.totalArrecadado = 0d;
   }
 
@@ -59,7 +60,7 @@ public class Equipamento {
         disponivel = false;
       }
     }
-    
+
     return disponivel;
   }
 
@@ -77,11 +78,18 @@ public class Equipamento {
    *         inválida.
    */
   public Aluguel alugar(LocalDate inicio, int duracaoAluguel) {
-    if (duracaoAluguel > 0 && duracaoAluguel <= this.duracaoMaxima && estaDisponivelEm(inicio)) {
-      
-      this.totalArrecadado += valorDiaria * duracaoAluguel;
-      
+    if (duracaoAluguel <= 0 || duracaoAluguel > this.duracaoMaxima)
+      return null;
+
+    for (int i = 0; i < duracaoAluguel; i++) {
+      if (!estaDisponivelEm(inicio.plusDays(i)))
+        return null;
     }
+
+    Aluguel aluguel = new Aluguel(this, inicio, duracaoAluguel);
+    this.totalArrecadado += valorDiario(duracaoAluguel) * duracaoAluguel;
+
+    return aluguel;
   }
 
   public double totalArrecadado() {
@@ -89,7 +97,7 @@ public class Equipamento {
   }
 
   public double valorDiario(int quantDias) {
-    //
+    return quantDias > 7 ? (valorDiaria - (valorDiaria * descontoSemanal)) : valorDiaria;
   }
 
   /**
