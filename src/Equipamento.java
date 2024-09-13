@@ -159,7 +159,7 @@ public class Equipamento {
       Aluguel aluguel = historico[i];
 
       relatAlugueis.append(String.format("%s\n", aluguel.relatorio()));
-      relatAlugueis.append("--------------------------------------------------");
+      relatAlugueis.append("--------------------------------------------------\n");
     }
 
     relatAlugueis.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));

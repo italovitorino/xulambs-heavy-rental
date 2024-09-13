@@ -43,7 +43,7 @@ public class Aluguel {
     relatorio.append(String.format("Início: %s\n", inicioAluguel));
     relatorio.append(String.format("Término: %s\n", inicioAluguel.plusDays(duracaoAluguel)));
     relatorio.append(String.format("Valor diária: %s\n", moeda.format(valorDiario)));
-    relatorio.append(String.format("Valor total do aluguel: %s\n", moeda.format(valorAluguel())));
+    relatorio.append(moeda.format(valorAluguel()));
 
     return relatorio.toString();
   }
