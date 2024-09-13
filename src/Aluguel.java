@@ -18,6 +18,7 @@ public class Aluguel {
   public Aluguel(Equipamento equipamento, LocalDate inicio, int duracao) {
     this.inicioAluguel = inicio;
     this.duracaoAluguel = duracao;
+    this.equipamento = equipamento;
     this.valorDiario = equipamento.valorDiario(duracao);
   }
 

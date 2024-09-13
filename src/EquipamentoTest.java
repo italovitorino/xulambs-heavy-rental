@@ -61,7 +61,7 @@ public class EquipamentoTest {
     assertNotNull(equipamento.alugar(LocalDate.now(), 2));
   }
 
-  @Test 
+  @Test
   void totalArrecadadoDeveSerIgualAZero() {
     assertEquals(0.0, equipamento.totalArrecadado(), 0.01);
   }
