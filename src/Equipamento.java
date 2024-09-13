@@ -2,18 +2,21 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 
 /**
- * Representa um equipamento disponível para aluguel.
- * Cada equipamento possui um identificador único, descrição, valor da diária,
- * duração máxima de aluguel, e mantém o total arrecadado com os aluguéis. A
- * classe permite verificar se o equipamento está disponível, realizar
- * aluguéis dentro das condições permitidas, calcular o valor do aluguel com
- * base na duração e exibir dados do equipamento.
+ * Representa um equipamento disponível para {@link Aluguel}. Cada equipamento possui um
+ * identificador único, descrição, duração máxima de aluguel, valor da diária,
+ * desconto semanal e registra o total arrecadado com os aluguéis. A classe
+ * gerencia a disponibilidade do equipamento, permite realizar aluguéis
+ * respeitando as condições estabelecidas, calcula o valor da diária com base na
+ * duração e disponibiliza dados detalhados do equipamento e seu histórico de
+ * aluguéis.
  */
 public class Equipamento {
 
+  private static int TAM_MAX_HISTORICO = 100;
   private static int ultimoId = 0;
   private int id;
   private Aluguel[] historico;
+  private int posHistorico;
   private String descricao;
   private int duracaoMaxima;
   private double valorDiaria;
@@ -24,22 +27,23 @@ public class Equipamento {
    * Construtor para criar um novo equipamento. Se os parâmetros forem inválidos,
    * serão aplicados valores padrão:
    * - Descrição: "Equipamento" (se tiver menos de 5 caracteres)
-   * - Valor da diária: 10 (se for menor ou igual a 0)
    * - Duração máxima: 7 (se for menor ou igual a 0)
-   * - Desconto: 0 (se não estiver entre 0 e 10)
+   * - Valor da diária: 10 (se for menor ou igual a 0)
+   * - Desconto: 0 (se for um valor fora do intervalo entre 0 e 10)
    *
    * @param descricao     Descrição do equipamento, deve ter pelo menos 5
    *                      caracteres.
    * @param diaria        Valor da diária, deve ser maior que 0.
    * @param duracaoMaxima Duração máxima do aluguel, deve ser maior que 0.
-   * @param desconto      Desconto, em porcentagem, se determinado aluguel passar
-   *                      de 7 dias. Deve estar entre 0 e 10.
+   * @param desconto      Desconto, em porcentagem. Deve estar entre 0 e 10.
    */
   public Equipamento(String descricao, double diaria, int duracaoMaxima, double desconto) {
     this.id = ++ultimoId;
+    this.historico = new Aluguel[TAM_MAX_HISTORICO];
+    this.posHistorico = 0;
     this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
-    this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
+    this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.descontoSemanal = desconto >= 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
     this.totalArrecadado = 0d;
   }
@@ -55,9 +59,12 @@ public class Equipamento {
   public boolean estaDisponivelEm(LocalDate data) {
     boolean disponivel = true;
 
-    for (Aluguel aluguel : historico) {
+    for (int i = 0; i < posHistorico; i++) {
+      Aluguel aluguel = historico[i];
+
       if (aluguel.incluiData(data)) {
         disponivel = false;
+        break;
       }
     }
 
@@ -73,9 +80,9 @@ public class Equipamento {
    * @param duracaoAluguel Duração do aluguel em dias. Deve ser maior que 0 e
    *                       menor ou igual à duração máxima permitida pelo
    *                       equipamento.
-   * @return {@code true} se o aluguel for realizado com sucesso; {@code false} se
-   *         o equipamento não estiver disponível ou se a duração do aluguel é
-   *         inválida.
+   * @return Um objeto {@link Aluguel} representando o aluguel realizado, ou
+   *         {@code null} se o aluguel não puder ser efetuado (duração inválida ou
+   *         falta de disponibilidade).
    */
   public Aluguel alugar(LocalDate inicio, int duracaoAluguel) {
     if (duracaoAluguel <= 0 || duracaoAluguel > this.duracaoMaxima)
@@ -87,22 +94,36 @@ public class Equipamento {
     }
 
     Aluguel aluguel = new Aluguel(this, inicio, duracaoAluguel);
+    historico[posHistorico] = aluguel;
+    posHistorico++;
     this.totalArrecadado += valorDiario(duracaoAluguel) * duracaoAluguel;
 
     return aluguel;
   }
 
+  /**
+   * Retorna o valor total arrecadado com aluguéis.
+   * 
+   * @return O valor total arrecadado com aluguéis.
+   */
   public double totalArrecadado() {
     return totalArrecadado;
   }
 
+  /**
+   * Calcula o valor diário do aluguel com base na quantidade de dias.
+   * 
+   * @param quantDias A quantidade de dias do aluguel. Deve ser um número inteiro
+   *                  positivo.
+   * @return O valor da diária do equipamento.
+   */
   public double valorDiario(int quantDias) {
     return quantDias > 7 ? (valorDiaria - (valorDiaria * descontoSemanal)) : valorDiaria;
   }
 
   /**
    * Retorna uma string formatada com os dados detalhados do equipamento,
-   * incluindo descrição, valor da diária, informações da última locação e o total
+   * incluindo descrição, valor da diária, desconto semanal (em %) e o total
    * arrecadado.
    *
    * @return Uma string com os dados do equipamento.
@@ -113,12 +134,36 @@ public class Equipamento {
 
     relatEquipamento.append(String.format("Descrição: %s\n", descricao));
     relatEquipamento.append(String.format("Valor da diária: %s\n", moeda.format(valorDiaria)));
+    relatEquipamento.append(String.format("Desconto semanal: %.2f%%\n", descontoSemanal * 100));
     relatEquipamento.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));
 
     return relatEquipamento.toString();
   }
 
+  /**
+   * Retorna uma string formatada com o histórico de aluguéis do equipamento,
+   * incluindo data de início, data de término, valor da diária, valor total por
+   * aluguel e o total geral arrecadado.
+   * 
+   * @return Uma string com os dados do historico de aluguéis do equipamento.
+   */
   public String relatorioAlugueis() {
-    //
+    NumberFormat moeda = NumberFormat.getCurrencyInstance();
+    StringBuilder relatAlugueis = new StringBuilder();
+
+    relatAlugueis.append("-------------------------\n");
+    relatAlugueis.append("| Histórico de Aluguéis |\n");
+    relatAlugueis.append("-------------------------\n");
+
+    for (int i = 0; i < posHistorico; i++) {
+      Aluguel aluguel = historico[i];
+
+      relatAlugueis.append(String.format("%s\n", aluguel.relatorio()));
+      relatAlugueis.append("--------------------------------------------------");
+    }
+
+    relatAlugueis.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));
+
+    return relatAlugueis.toString();
   }
 }
