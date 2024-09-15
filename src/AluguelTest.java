@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 public class AluguelTest {
   static Equipamento equipamento;
   static Aluguel aluguel;
-  static Aluguel aluguel2;
 
   @BeforeEach
   public void setUp() {
@@ -40,7 +39,7 @@ public class AluguelTest {
 
   @Test
   public void incluiData() {
-    assertTrue(aluguel.incluiData(LocalDate.of(2024, 12, 12)));
-    assertTrue(aluguel.incluiData(LocalDate.of(2024, 12, 22)));
+    assertTrue(aluguel.incluiData(LocalDate.of(2024, 12, 13)));
+    assertTrue(aluguel.incluiData(LocalDate.of(2024, 12, 21)));
   }
 }
