@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
@@ -173,11 +174,11 @@ public class XHRAlugueis {
 
   public static void main(String[] args) throws Exception {
     sc = new Scanner(System.in);
-    int opt;
+    NumberFormat moeda = NumberFormat.getCurrencyInstance();
     Equipamento[] equipamentos = lerEquipamentos("dados.csv");
     Equipamento[] equipamentosTemp;
     equipamentosTemp = Arrays.copyOf(equipamentos, 100);
-    int posEquipamentosTemp = equipamentos.length;
+    int opt, posEquipamentosTemp = equipamentos.length;
     Equipamento equipamento;
     Aluguel aluguel;
     String descricaoEquipamento;
@@ -244,7 +245,7 @@ public class XHRAlugueis {
                 pausar();
                 break;
               case 3:
-                System.out.println(equipamento.totalArrecadado());
+                System.out.println(moeda.format(equipamento.totalArrecadado()));
                 pausar();
                 break;
               default:
