@@ -92,23 +92,25 @@ public class XHRAlugueis {
   }
 
   static Equipamento cadastrarEquipamento() {
-    String descricao, valorDiariaString;
+    String descricao, valorDiariaStr, descontoStr;
     int duracaoMaxima;
     double valorDiaria, desconto;
 
     descricao = lerDescricaoEquipamento();
 
     System.out.print("Valor diária: R$ ");
-    valorDiariaString = sc.nextLine();
-    valorDiariaString = valorDiariaString.replaceAll(",", ".");
-    valorDiaria = Double.parseDouble(valorDiariaString);
+    valorDiariaStr = sc.nextLine();
+    valorDiariaStr = valorDiariaStr.replaceAll(",", ".");
+    valorDiaria = Double.parseDouble(valorDiariaStr);
     
 
     System.out.print("Duração máxima permitida (em dias): ");
     duracaoMaxima = Integer.parseInt(sc.nextLine());
 
     System.out.print("Desconto (%): ");
-    desconto = Double.parseDouble(sc.nextLine());
+    descontoStr = sc.nextLine();
+    descontoStr = descontoStr.replaceAll(",", ".");
+    desconto = Double.parseDouble(descontoStr);
 
     return new Equipamento(descricao, valorDiaria, duracaoMaxima, desconto);
   }
