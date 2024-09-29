@@ -59,6 +59,12 @@ public class XHRAlugueis {
     return equipamentos;
   }
 
+  static void cabecalho() {
+    System.out.print("------------------------\n");
+    System.out.print("| XULAMBS HEAVY RENTAL |\n");
+    System.out.print("------------------------\n");
+  }
+  
   static void limparTela() {
     System.out.print("\033[H\033[2J");
     System.out.flush();
@@ -86,16 +92,19 @@ public class XHRAlugueis {
   }
 
   static Equipamento cadastrarEquipamento() {
-    String descricao;
+    String descricao, valorDiariaString;
     int duracaoMaxima;
     double valorDiaria, desconto;
 
     descricao = lerDescricaoEquipamento();
 
     System.out.print("Valor diária: R$ ");
-    valorDiaria = Double.parseDouble(sc.nextLine());
+    valorDiariaString = sc.nextLine();
+    valorDiariaString = valorDiariaString.replaceAll(",", ".");
+    valorDiaria = Double.parseDouble(valorDiariaString);
+    
 
-    System.out.print("Duração máxima permitida: ");
+    System.out.print("Duração máxima permitida (em dias): ");
     duracaoMaxima = Integer.parseInt(sc.nextLine());
 
     System.out.print("Desconto (%): ");
@@ -151,6 +160,15 @@ public class XHRAlugueis {
     return equipamento.alugar(dataInicio, qtdDias);
   }
 
+  static int exibirMenuEquipamento() {
+    cabecalho();
+    System.out.println("[1] Dados do equipamento");
+    System.out.println("[2] Histórico de aluguéis");
+    System.out.println("[3] Total arrecadado\n");
+    System.out.print(">_ ");
+    return Integer.parseInt(sc.nextLine());
+  }
+
   public static void main(String[] args) throws Exception {
     sc = new Scanner(System.in);
     int opt;
@@ -162,37 +180,43 @@ public class XHRAlugueis {
     Aluguel aluguel;
     String descricaoEquipamento;
 
+    cabecalho();
     opt = exibirMenuPrincipal();
     do {
       switch (opt) {
         case 1:
           limparTela();
+          cabecalho();
           equipamentosTemp[posEquipamentosTemp] = cadastrarEquipamento();
-          System.out.print(equipamentosTemp[posEquipamentosTemp].dadosEquipamento());
+          System.out.print("\n" + equipamentosTemp[posEquipamentosTemp].dadosEquipamento());
           posEquipamentosTemp++;
           pausar();
           break;
         case 2:
           limparTela();
+          cabecalho();
           descricaoEquipamento = lerDescricaoEquipamento();
           equipamento = localizarEquipamento(descricaoEquipamento, equipamentosTemp);
           if (equipamento != null) {
             aluguel = alugarEquipamento(equipamento);
             if (aluguel != null) {
-              System.out.print(aluguel.relatorio());
+              System.out.print("\n" + aluguel.relatorio());
             } else {
               System.out.println("\nEquipamento não disponível para a data informada.");
             }
           } else {
             System.out.println("\nEquipamento não existe.");
           }
+          System.out.print("\n");
           pausar();
           break;
         case 3:
+          limparTela();
+          cabecalho();
           Equipamento equipamentoAux = equipamentosTemp[0];
 
-          for (int i = 1; i < posEquipamentosTemp; i++) {
-            if (equipamentosTemp[posEquipamentosTemp].totalArrecadado() > equipamentoAux.totalArrecadado()) {
+          for (int i = 0; i < posEquipamentosTemp; i++) {
+            if (equipamentosTemp[i].totalArrecadado() > equipamentoAux.totalArrecadado()) {
               equipamentoAux = equipamentosTemp[i];
             }
           }
@@ -200,12 +224,44 @@ public class XHRAlugueis {
           System.out.println(equipamentoAux.dadosEquipamento());
           pausar();
           break;
+        case 4:
+          limparTela();
+          cabecalho();
+          descricaoEquipamento = lerDescricaoEquipamento();
+          equipamento = localizarEquipamento(descricaoEquipamento, equipamentosTemp);
+          if (equipamento != null) {
+            opt = exibirMenuEquipamento();
+
+            switch (opt) {
+              case 1:
+                System.out.println(equipamento.dadosEquipamento());
+                pausar();
+                break;
+              case 2:
+                System.out.println(equipamento.relatorioAlugueis());
+                pausar();
+                break;
+              case 3:
+                System.out.println(equipamento.totalArrecadado());
+                pausar();
+                break;
+              default:
+                break;
+            }
+          } else {
+            System.out.println("\nEquipamento não existe.");
+            pausar();
+          }
+          break;
         default:
           System.out.print("Opção inválida!");
           break;
       }
+      limparTela();
+      cabecalho();
       opt = exibirMenuPrincipal();
     } while (opt != 0);
     sc.close();
+    System.out.print("Finalizando o sistema...");
   }
 }
