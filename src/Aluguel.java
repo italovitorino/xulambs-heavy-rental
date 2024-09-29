@@ -44,7 +44,7 @@ public class Aluguel {
     relatorio.append(String.format("Início: %s\n", inicioAluguel));
     relatorio.append(String.format("Término: %s\n", inicioAluguel.plusDays(duracaoAluguel)));
     relatorio.append(String.format("Valor diária: %s\n", moeda.format(valorDiario)));
-    relatorio.append(moeda.format(valorAluguel()));
+    relatorio.append(String.format("Total a pagar: %s", moeda.format(valorAluguel())));
 
     return relatorio.toString();
   }
@@ -61,7 +61,7 @@ public class Aluguel {
     if (inicioAluguel == null)
       return false;
 
-    LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel);
+    LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel - 1);
     return !data.isBefore(inicioAluguel) && !data.isAfter(fimAluguel);
   }
 }

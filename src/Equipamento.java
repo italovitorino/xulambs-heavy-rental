@@ -2,7 +2,8 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 
 /**
- * Representa um equipamento disponível para {@link Aluguel}. Cada equipamento possui um
+ * Representa um equipamento disponível para {@link Aluguel}. Cada equipamento
+ * possui um
  * identificador único, descrição, duração máxima de aluguel, valor da diária,
  * desconto semanal e registra o total arrecadado com os aluguéis. A classe
  * gerencia a disponibilidade do equipamento, permite realizar aluguéis
@@ -46,6 +47,14 @@ public class Equipamento {
     this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.descontoSemanal = desconto >= 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
     this.totalArrecadado = 0d;
+  }
+
+  /**
+   * Retorna a descrição do equipamento.
+   * @return A descrição do equipamento
+   */
+  public String getDescricao() {
+    return descricao;
   }
 
   /**
