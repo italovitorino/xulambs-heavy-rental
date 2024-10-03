@@ -1,5 +1,16 @@
+package com.lpm.XHRRentals.Models;
+
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 /**
  * Representa um equipamento disponível para {@link Aluguel}. Cada equipamento
@@ -11,18 +22,28 @@ import java.time.LocalDate;
  * duração e disponibiliza dados detalhados do equipamento e seu histórico de
  * aluguéis.
  */
+@Entity
+@Table(name = "equipamentos")
 public class Equipamento {
 
-  private static int TAM_MAX_HISTORICO = 100;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int idEquipamento;
+
   private static int ultimoId = 0;
   private int id;
-  private Aluguel[] historico;
+
+  @OneToMany
+  private List<Aluguel> historico;
+  
   private int posHistorico;
   private String descricao;
   private int duracaoMaxima;
   private double valorDiaria;
   private double descontoSemanal;
   private double totalArrecadado;
+
+  public Equipamento() {}
 
   /**
    * Construtor para criar um novo equipamento. Se os parâmetros forem inválidos,
@@ -40,7 +61,7 @@ public class Equipamento {
    */
   public Equipamento(String descricao, double diaria, int duracaoMaxima, double desconto) {
     this.id = ++ultimoId;
-    this.historico = new Aluguel[TAM_MAX_HISTORICO];
+    this.historico = new LinkedList<>();
     this.posHistorico = 0;
     this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
@@ -69,7 +90,7 @@ public class Equipamento {
     boolean disponivel = true;
 
     for (int i = 0; i < posHistorico; i++) {
-      Aluguel aluguel = historico[i];
+      Aluguel aluguel = historico.get(i);
 
       if (aluguel.incluiData(data)) {
         disponivel = false;
@@ -103,7 +124,6 @@ public class Equipamento {
     }
 
     Aluguel aluguel = new Aluguel(this, inicio, duracaoAluguel);
-    historico[posHistorico] = aluguel;
     posHistorico++;
     this.totalArrecadado += valorDiario(duracaoAluguel) * duracaoAluguel;
 
@@ -165,7 +185,7 @@ public class Equipamento {
     relatAlugueis.append("-------------------------\n");
 
     for (int i = 0; i < posHistorico; i++) {
-      Aluguel aluguel = historico[i];
+      Aluguel aluguel = historico.get(i);
 
       relatAlugueis.append(String.format("%s\n", aluguel.relatorio()));
       relatAlugueis.append("--------------------------------------------------\n");

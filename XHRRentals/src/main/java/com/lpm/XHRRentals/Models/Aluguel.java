@@ -1,5 +1,14 @@
+package com.lpm.XHRRentals.Models;
+
 import java.text.NumberFormat;
 import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 /**
  * Representa um aluguel de um {@link Equipamento}, contendo informações sobre a data de
@@ -8,11 +17,20 @@ import java.time.LocalDate;
  * dentro do período do aluguel e exibe dados detalhados sobre o aluguel
  * realizado.
  */
+@Entity
+@Table(name = "alugueis")
 public class Aluguel {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int idAluguel;
 
   private LocalDate inicioAluguel;
   private int duracaoAluguel;
+
+  @ManyToOne
   private Equipamento equipamento;
+  
   private double valorDiario;
 
   public Aluguel(Equipamento equipamento, LocalDate inicio, int duracao) {
