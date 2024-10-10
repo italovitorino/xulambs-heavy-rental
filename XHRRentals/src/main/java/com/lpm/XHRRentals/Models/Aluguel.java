@@ -33,6 +33,8 @@ public class Aluguel {
   
   private double valorDiario;
 
+  public Aluguel(){}
+
   public Aluguel(Equipamento equipamento, LocalDate inicio, int duracao) {
     this.inicioAluguel = inicio;
     this.duracaoAluguel = duracao;
@@ -81,5 +83,9 @@ public class Aluguel {
 
     LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel - 1);
     return !data.isBefore(inicioAluguel) && !data.isAfter(fimAluguel);
+  }
+
+  public String getRelatorio() {
+    return relatorio();
   }
 }
