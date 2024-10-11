@@ -36,7 +36,6 @@ public class Equipamento {
   @OneToMany
   private List<Aluguel> historico;
   
-  private int posHistorico;
   private String descricao;
   private int duracaoMaxima;
   private double valorDiaria;
@@ -62,7 +61,6 @@ public class Equipamento {
   public Equipamento(String descricao, double diaria, int duracaoMaxima, double desconto) {
     this.id = ++ultimoId;
     this.historico = new LinkedList<>();
-    this.posHistorico = 0;
     this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
     this.valorDiaria = diaria > 0 ? diaria : 10d;
@@ -89,7 +87,7 @@ public class Equipamento {
   public boolean estaDisponivelEm(LocalDate data) {
     boolean disponivel = true;
 
-    for (int i = 0; i < posHistorico; i++) {
+    for (int i = 0; i < historico.size(); i++) {
       Aluguel aluguel = historico.get(i);
 
       if (aluguel.incluiData(data)) {
@@ -124,7 +122,7 @@ public class Equipamento {
     }
 
     Aluguel aluguel = new Aluguel(this, inicio, duracaoAluguel);
-    posHistorico++;
+    historico.add(aluguel);
     this.totalArrecadado += valorDiario(duracaoAluguel) * duracaoAluguel;
 
     return aluguel;
@@ -184,7 +182,7 @@ public class Equipamento {
     relatAlugueis.append("| Histórico de Aluguéis |\n");
     relatAlugueis.append("-------------------------\n");
 
-    for (int i = 0; i < posHistorico; i++) {
+    for (int i = 0; i < historico.size(); i++) {
       Aluguel aluguel = historico.get(i);
 
       relatAlugueis.append(String.format("%s\n", aluguel.relatorio()));
