@@ -76,6 +76,10 @@ public class Equipamento {
     return descricao;
   }
 
+  public String getDadosEquipamento() {
+    return dadosEquipamento();
+  }
+
   /**
    * Verifica se o equipamento está disponível para locação em uma data
    * específica.
