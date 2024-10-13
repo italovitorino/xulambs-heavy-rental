@@ -30,7 +30,7 @@ public class Equipamento {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int idEquipamento;
 
-  private static int ultimoId = 0;
+  private static int ultimoId = 10_000;
   private int id;
 
   @OneToMany
@@ -61,7 +61,7 @@ public class Equipamento {
   public Equipamento(String descricao, double diaria, int duracaoMaxima, double desconto) {
     this.id = ++ultimoId;
     this.historico = new LinkedList<>();
-    this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
+    this.descricao = (descricao.length() >= 5) ? descricao : descricao + ultimoId;
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
     this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.descontoSemanal = desconto >= 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
