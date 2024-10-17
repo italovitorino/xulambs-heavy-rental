@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.lpm.XHRRentals.DTO.EquipamentoDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -196,5 +198,9 @@ public class Equipamento {
     relatAlugueis.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));
 
     return relatAlugueis.toString();
+  }
+
+  public EquipamentoDTO gerarDTO() {
+    return new EquipamentoDTO(idEquipamento, descricao, duracaoMaxima, valorDiaria, descontoSemanal, totalArrecadado);
   }
 }
