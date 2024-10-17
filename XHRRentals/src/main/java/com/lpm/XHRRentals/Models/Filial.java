@@ -1,6 +1,9 @@
 package com.lpm.XHRRentals.Models;
 
 import java.util.List;
+
+import com.lpm.XHRRentals.DTO.FilialDTO;
+
 import java.util.LinkedList;
 
 import jakarta.persistence.Entity;
@@ -81,5 +84,9 @@ public class Filial {
     relatFilial.append(String.format("Filial: %s", nomeFilial));
 
     return relatFilial.toString();
+  }
+
+  public FilialDTO gerarDTO() {
+    return new FilialDTO(id, nomeFilial);
   }
 }

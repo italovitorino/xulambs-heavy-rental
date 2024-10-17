@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lpm.XHRRentals.Models.Filial;
+import com.lpm.XHRRentals.DTO.FilialDTO;
 import com.lpm.XHRRentals.Models.Equipamento;
 
 import jakarta.persistence.EntityManager;
@@ -19,7 +20,7 @@ public class FilialController {
   EntityManagerFactory factory;
 
   @PostMapping("/filiais")
-  public @ResponseBody Filial cadastrarFilial(@RequestParam String nome) {
+  public @ResponseBody FilialDTO cadastrarFilial(@RequestParam String nome) {
     EntityManager manager = factory.createEntityManager();
     Filial filial = new Filial(nome);
 
@@ -27,7 +28,7 @@ public class FilialController {
     manager.persist(filial);
     manager.getTransaction().commit();
 
-    return filial;
+    return filial.gerarDTO();
   }
 
 }
