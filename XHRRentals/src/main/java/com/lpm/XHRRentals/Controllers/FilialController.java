@@ -65,4 +65,19 @@ public class FilialController {
 
     return equipamento;
   }
+
+  @GetMapping("filiais/{idFilial}/maior-arrecadacao/{e1}/{e2}")
+  public @ResponseBody Equipamento maiorArrecadao(@PathVariable Long idFilial, 
+                                                  @PathVariable String e1, 
+                                                  @PathVariable String e2) {
+    EntityManager manager = factory.createEntityManager();
+    Filial filial = manager.find(Filial.class, idFilial);
+    Equipamento maior = null;
+
+    if (filial != null) {
+      maior = filial.maiorArrecadacao(e1, e2);
+    }
+
+    return maior;
+  }
 }
