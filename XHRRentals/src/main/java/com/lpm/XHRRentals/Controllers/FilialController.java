@@ -1,6 +1,7 @@
 package com.lpm.XHRRentals.Controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,5 +51,18 @@ public class FilialController {
     }
 
     return totEquipamentos;
+  }
+
+  @GetMapping("filiais/{id}/maior-arrecadacao")
+  public @ResponseBody Equipamento maiorArrecadacao(@PathVariable Long id) {
+    EntityManager manager = factory.createEntityManager();
+    Filial filial = manager.find(Filial.class, id);
+    Equipamento equipamento = null;
+
+    if (filial != null) {
+      equipamento = filial.maiorArrecadacao();
+    }
+
+    return equipamento;
   }
 }
