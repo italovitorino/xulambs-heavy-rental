@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -43,6 +45,10 @@ public class Equipamento {
   private double valorDiaria;
   private double descontoSemanal;
   private double totalArrecadado;
+
+  @ManyToOne
+  @JoinColumn(name = "filial_id")
+  private Filial filial;
 
   public Equipamento() {}
 

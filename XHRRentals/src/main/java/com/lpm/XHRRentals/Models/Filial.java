@@ -23,7 +23,7 @@ public class Filial {
 
   private String nomeFilial;
 
-  @OneToMany
+  @OneToMany(mappedBy = "filial")
   private List<Equipamento> equipamentos;
 
   public Filial(){}
