@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lpm.XHRRentals.Models.Equipamento;
 import com.lpm.XHRRentals.Models.Filial;
+import com.lpm.XHRRentals.DTO.EquipamentoDTO;
 import com.lpm.XHRRentals.DTO.FilialDTO;
 
 import jakarta.persistence.EntityManager;
@@ -54,7 +55,7 @@ public class FilialController {
   }
 
   @GetMapping("filiais/{id}/maior-arrecadacao")
-  public @ResponseBody Equipamento maiorArrecadacao(@PathVariable Long id) {
+  public @ResponseBody EquipamentoDTO maiorArrecadacao(@PathVariable Long id) {
     EntityManager manager = factory.createEntityManager();
     Filial filial = manager.find(Filial.class, id);
     Equipamento equipamento = null;
@@ -63,11 +64,11 @@ public class FilialController {
       equipamento = filial.maiorArrecadacao();
     }
 
-    return equipamento;
+    return equipamento.gerarDTO();
   }
 
   @GetMapping("filiais/{idFilial}/maior-arrecadacao/{e1}/{e2}")
-  public @ResponseBody Equipamento maiorArrecadao(@PathVariable Long idFilial, 
+  public @ResponseBody EquipamentoDTO maiorArrecadao(@PathVariable Long idFilial, 
                                                   @PathVariable String e1, 
                                                   @PathVariable String e2) {
     EntityManager manager = factory.createEntityManager();
@@ -78,6 +79,6 @@ public class FilialController {
       maior = filial.maiorArrecadacao(e1, e2);
     }
 
-    return maior;
+    return maior.gerarDTO();
   }
 }
