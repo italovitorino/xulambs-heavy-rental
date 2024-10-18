@@ -55,7 +55,7 @@ public class Filial {
   }
 
   public Equipamento maiorArrecadacao() {
-    Equipamento equipamento = null;
+    Equipamento equipamento = equipamentos.get(0);
 
     for (Equipamento e : equipamentos) {
       if (e.totalArrecadado() > equipamento.totalArrecadado()) {
