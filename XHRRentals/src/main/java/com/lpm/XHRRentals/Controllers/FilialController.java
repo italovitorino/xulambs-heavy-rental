@@ -64,7 +64,7 @@ public class FilialController {
       equipamento = filial.maiorArrecadacao();
     }
 
-    return equipamento.gerarDTO();
+    return equipamento != null ? equipamento.gerarDTO() : null;
   }
 
   @GetMapping("filiais/{idFilial}/maior-arrecadacao/{e1}/{e2}")
