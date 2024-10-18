@@ -79,6 +79,6 @@ public class FilialController {
       maior = filial.maiorArrecadacao(e1, e2);
     }
 
-    return maior.gerarDTO();
+    return maior != null ? maior.gerarDTO() : null;
   }
 }
