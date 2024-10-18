@@ -88,6 +88,10 @@ public class Equipamento {
     return dadosEquipamento();
   }
 
+  public void setFilial(Filial filial) {
+    this.filial = filial;
+  }
+
   /**
    * Verifica se o equipamento está disponível para locação em uma data
    * específica.
