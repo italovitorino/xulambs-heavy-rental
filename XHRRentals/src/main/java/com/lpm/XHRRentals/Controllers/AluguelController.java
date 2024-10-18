@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lpm.XHRRentals.Models.Aluguel;
@@ -16,12 +17,13 @@ import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 
 @Controller
+@RequestMapping("/alugueis")
 public class AluguelController {
 
   @PersistenceUnit
   EntityManagerFactory factory;
 
-  @GetMapping("/alugueis/equipamento/{id}")
+  @GetMapping("/equipamento/{id}")
   public @ResponseBody List<Aluguel> alugueisEquipamento(@PathVariable int id) {
     EntityManager manager = factory.createEntityManager();
     Equipamento equipamento = manager.find(Equipamento.class, id);

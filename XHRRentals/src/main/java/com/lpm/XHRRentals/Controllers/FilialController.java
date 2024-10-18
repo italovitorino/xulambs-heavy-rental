@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,12 +19,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 
 @Controller
+@RequestMapping("/filiais")
 public class FilialController {
   
   @PersistenceUnit
   EntityManagerFactory factory;
 
-  @PostMapping("/filiais")
+  @PostMapping
   public @ResponseBody FilialDTO cadastrarFilial(@RequestParam String nome) {
     EntityManager manager = factory.createEntityManager();
     Filial filial = new Filial(nome);
@@ -35,7 +37,7 @@ public class FilialController {
     return filial.gerarDTO();
   }
 
-  @PutMapping("filiais/{idFilial}/equipamentos/{idEquipamento}")
+  @PutMapping("/{idFilial}/equipamentos/{idEquipamento}")
   public @ResponseBody int associarEquipamento(@PathVariable Long idFilial, @PathVariable Long idEquipamento) {
     EntityManager manager = factory.createEntityManager();
     Filial filial = manager.find(Filial.class, idFilial);
@@ -54,7 +56,7 @@ public class FilialController {
     return totEquipamentos;
   }
 
-  @GetMapping("filiais/{id}/maior-arrecadacao")
+  @GetMapping("/{id}/maior-arrecadacao")
   public @ResponseBody EquipamentoDTO maiorArrecadacao(@PathVariable Long id) {
     EntityManager manager = factory.createEntityManager();
     Filial filial = manager.find(Filial.class, id);
@@ -67,7 +69,7 @@ public class FilialController {
     return equipamento != null ? equipamento.gerarDTO() : null;
   }
 
-  @GetMapping("filiais/{idFilial}/maior-arrecadacao/{e1}/{e2}")
+  @GetMapping("/{idFilial}/maior-arrecadacao/{e1}/{e2}")
   public @ResponseBody EquipamentoDTO maiorArrecadao(@PathVariable Long idFilial, 
                                                   @PathVariable String e1, 
                                                   @PathVariable String e2) {

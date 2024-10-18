@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,12 +19,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 
 @Controller
+@RequestMapping("/equipamentos")
 public class EquipamentoController {
 
   @PersistenceUnit
   EntityManagerFactory factory;
 
-  @PostMapping("/equipamentos")
+  @PostMapping
   public @ResponseBody Equipamento cadastrarEquipamento(@RequestParam String descricao,
       @RequestParam double diaria,
       @RequestParam int duracao,
@@ -39,7 +41,7 @@ public class EquipamentoController {
     return novoEquipamento;
   }
 
-  @PutMapping("equipamentos/alugar/{id}/{inicio}/{duracao}")
+  @PutMapping("/alugar/{id}/{inicio}/{duracao}")
   public @ResponseBody Aluguel alugarEquipamento(@PathVariable int id, 
                                                  @PathVariable LocalDate inicio,
                                                  @PathVariable int duracao) {
@@ -56,21 +58,21 @@ public class EquipamentoController {
     return aluguel;
   }
 
-  @GetMapping("/equipamentos/{id}")
+  @GetMapping("/{id}")
   public @ResponseBody Equipamento buscarEquipamento(@PathVariable int id) {
     EntityManager manager = factory.createEntityManager();
     Equipamento equipamento = manager.find(Equipamento.class, id);
     return equipamento;
   }
 
-  @GetMapping("/equipamentos/relatorio/{id}")
+  @GetMapping("/relatorio/{id}")
   public @ResponseBody String relatorioEquipamento(@PathVariable int id) {
     EntityManager manager = factory.createEntityManager();
     Equipamento equipamento = manager.find(Equipamento.class, id);
     return equipamento.relatorioAlugueis();
   }
 
-  @GetMapping("/equipamentos/arrecadacao/{id}")
+  @GetMapping("/arrecadacao/{id}")
   public @ResponseBody double totalArrecadado(@PathVariable int id) {
     EntityManager manager = factory.createEntityManager();
     Equipamento equipamento = manager.find(Equipamento.class, id);
