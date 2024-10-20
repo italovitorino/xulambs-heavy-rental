@@ -18,6 +18,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/filiais")
 public class FilialController {
@@ -83,5 +85,15 @@ public class FilialController {
         }
 
         return maior != null ? maior.gerarDTO() : null;
+    }
+
+    @GetMapping("/{id}/equipamentos")
+    public @ResponseBody List<EquipamentoDTO> listarEquipamentos(@PathVariable Long id) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, id);
+        List<Equipamento> equipamentos = manager.createQuery(
+                "SELECT e FROM Equipamento e WHERE e.filial.id = :idFilial",
+                Equipamento.class).setParameter("idFilial", id).getResultList();
+        return equipamentos.stream().map(Equipamento::gerarDTO).toList();
     }
 }
