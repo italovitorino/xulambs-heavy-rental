@@ -1,22 +1,14 @@
 package com.lpm.XHRRentals.Controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.lpm.XHRRentals.Models.Equipamento;
-import com.lpm.XHRRentals.Models.Filial;
 import com.lpm.XHRRentals.DTO.EquipamentoDTO;
 import com.lpm.XHRRentals.DTO.FilialDTO;
-
+import com.lpm.XHRRentals.Models.Equipamento;
+import com.lpm.XHRRentals.Models.Filial;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -73,9 +65,9 @@ public class FilialController {
     }
 
     @GetMapping("/{idFilial}/maior-arrecadacao/{e1}/{e2}")
-    public @ResponseBody EquipamentoDTO maiorArrecadao(@PathVariable Long idFilial,
-                                                       @PathVariable String e1,
-                                                       @PathVariable String e2) {
+    public @ResponseBody EquipamentoDTO maiorArrecadacao(@PathVariable Long idFilial,
+                                                         @PathVariable String e1,
+                                                         @PathVariable String e2) {
         EntityManager manager = factory.createEntityManager();
         Filial filial = manager.find(Filial.class, idFilial);
         Equipamento maior = null;
@@ -87,10 +79,21 @@ public class FilialController {
         return maior != null ? maior.gerarDTO() : null;
     }
 
+    @GetMapping("/{id}/relatorio")
+    public @ResponseBody String relatorio(@PathVariable Long id) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, id);
+        String relatorio = "";
+        if (filial != null) {
+            relatorio = filial.relatorioFilial();
+        }
+
+        return relatorio;
+    }
+
     @GetMapping("/{id}/equipamentos")
     public @ResponseBody List<EquipamentoDTO> listarEquipamentos(@PathVariable Long id) {
         EntityManager manager = factory.createEntityManager();
-        Filial filial = manager.find(Filial.class, id);
         List<Equipamento> equipamentos = manager.createQuery(
                 "SELECT e FROM Equipamento e WHERE e.filial.id = :idFilial",
                 Equipamento.class).setParameter("idFilial", id).getResultList();

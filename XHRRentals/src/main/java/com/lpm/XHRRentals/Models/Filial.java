@@ -118,7 +118,7 @@ public class Filial {
      */
     public String relatorioFilial() {
         StringBuilder relatFilial = new StringBuilder();
-        relatFilial.append(String.format("ID: %ld", id));
+        relatFilial.append(String.format("ID: %d\n", id));
         relatFilial.append(String.format("Filial: %s", nomeFilial));
 
         return relatFilial.toString();
