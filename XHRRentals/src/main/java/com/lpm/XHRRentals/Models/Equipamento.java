@@ -85,6 +85,8 @@ public class Equipamento {
         this.filial = filial;
     }
 
+    public Filial getFilial() { return filial; };
+
     /**
      * Verifica se o equipamento está disponível para locação em uma data
      * específica.
@@ -204,6 +206,6 @@ public class Equipamento {
     }
 
     public EquipamentoDTO gerarDTO() {
-        return new EquipamentoDTO(idEquipamento, descricao, duracaoMaxima, valorDiaria, descontoSemanal, totalArrecadado);
+        return new EquipamentoDTO(idEquipamento, descricao, duracaoMaxima, valorDiaria, descontoSemanal, totalArrecadado, filial.gerarDTO());
     }
 }

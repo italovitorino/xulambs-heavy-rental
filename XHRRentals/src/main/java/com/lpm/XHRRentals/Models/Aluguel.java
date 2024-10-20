@@ -1,5 +1,6 @@
 package com.lpm.XHRRentals.Models;
 
+import com.lpm.XHRRentals.DTO.AluguelDTO;
 import jakarta.persistence.*;
 
 import java.text.NumberFormat;
@@ -83,5 +84,9 @@ public class Aluguel {
 
     public String getRelatorio() {
         return relatorio();
+    }
+
+    public AluguelDTO gerarDTO() {
+        return new AluguelDTO(idAluguel, inicioAluguel, duracaoAluguel, equipamento.gerarDTO(), valorDiario);
     }
 }
