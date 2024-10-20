@@ -77,11 +77,15 @@ public class Filial {
      * @return o equipamento com a maior arrecação total.
      */
     public Equipamento maiorArrecadacao() {
-        Equipamento equipamento = equipamentos.get(0);
+        Equipamento equipamento = null;
 
-        for (Equipamento e : equipamentos) {
-            if (e.totalArrecadado() > equipamento.totalArrecadado()) {
-                equipamento = e;
+        if (!equipamentos.isEmpty()) {
+            equipamento = equipamentos.get(0);
+
+            for (Equipamento e : equipamentos) {
+                if (e.totalArrecadado() > equipamento.totalArrecadado()) {
+                    equipamento = e;
+                }
             }
         }
 
