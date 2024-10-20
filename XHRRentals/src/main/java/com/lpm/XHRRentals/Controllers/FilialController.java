@@ -21,66 +21,67 @@ import jakarta.persistence.PersistenceUnit;
 @Controller
 @RequestMapping("/filiais")
 public class FilialController {
-  
-  @PersistenceUnit
-  EntityManagerFactory factory;
 
-  @PostMapping
-  public @ResponseBody FilialDTO cadastrarFilial(@RequestParam String nome) {
-    EntityManager manager = factory.createEntityManager();
-    Filial filial = new Filial(nome);
+    @PersistenceUnit
+    EntityManagerFactory factory;
 
-    manager.getTransaction().begin();;
-    manager.persist(filial);
-    manager.getTransaction().commit();
+    @PostMapping
+    public @ResponseBody FilialDTO cadastrarFilial(@RequestParam String nome) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = new Filial(nome);
 
-    return filial.gerarDTO();
-  }
+        manager.getTransaction().begin();
+        ;
+        manager.persist(filial);
+        manager.getTransaction().commit();
 
-  @PutMapping("/{idFilial}/equipamentos/{idEquipamento}")
-  public @ResponseBody int associarEquipamento(@PathVariable Long idFilial, @PathVariable Long idEquipamento) {
-    EntityManager manager = factory.createEntityManager();
-    Filial filial = manager.find(Filial.class, idFilial);
-    Equipamento equipamento = manager.find(Equipamento.class, idEquipamento);
-
-    int totEquipamentos = 0;
-
-    if (filial != null && equipamento != null) {
-      totEquipamentos = filial.cadastrarEquipamento(equipamento);
-      equipamento.setFilial(filial);
-      manager.getTransaction().begin();
-      manager.persist(equipamento);
-      manager.getTransaction().commit();
+        return filial.gerarDTO();
     }
 
-    return totEquipamentos;
-  }
+    @PutMapping("/{idFilial}/equipamentos/{idEquipamento}")
+    public @ResponseBody int associarEquipamento(@PathVariable Long idFilial, @PathVariable Long idEquipamento) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, idFilial);
+        Equipamento equipamento = manager.find(Equipamento.class, idEquipamento);
 
-  @GetMapping("/{id}/maior-arrecadacao")
-  public @ResponseBody EquipamentoDTO maiorArrecadacao(@PathVariable Long id) {
-    EntityManager manager = factory.createEntityManager();
-    Filial filial = manager.find(Filial.class, id);
-    Equipamento equipamento = null;
+        int totEquipamentos = 0;
 
-    if (filial != null) {
-      equipamento = filial.maiorArrecadacao();
+        if (filial != null && equipamento != null) {
+            totEquipamentos = filial.cadastrarEquipamento(equipamento);
+            equipamento.setFilial(filial);
+            manager.getTransaction().begin();
+            manager.persist(equipamento);
+            manager.getTransaction().commit();
+        }
+
+        return totEquipamentos;
     }
 
-    return equipamento != null ? equipamento.gerarDTO() : null;
-  }
+    @GetMapping("/{id}/maior-arrecadacao")
+    public @ResponseBody EquipamentoDTO maiorArrecadacao(@PathVariable Long id) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, id);
+        Equipamento equipamento = null;
 
-  @GetMapping("/{idFilial}/maior-arrecadacao/{e1}/{e2}")
-  public @ResponseBody EquipamentoDTO maiorArrecadao(@PathVariable Long idFilial, 
-                                                  @PathVariable String e1, 
-                                                  @PathVariable String e2) {
-    EntityManager manager = factory.createEntityManager();
-    Filial filial = manager.find(Filial.class, idFilial);
-    Equipamento maior = null;
+        if (filial != null) {
+            equipamento = filial.maiorArrecadacao();
+        }
 
-    if (filial != null) {
-      maior = filial.maiorArrecadacao(e1, e2);
+        return equipamento != null ? equipamento.gerarDTO() : null;
     }
 
-    return maior != null ? maior.gerarDTO() : null;
-  }
+    @GetMapping("/{idFilial}/maior-arrecadacao/{e1}/{e2}")
+    public @ResponseBody EquipamentoDTO maiorArrecadao(@PathVariable Long idFilial,
+                                                       @PathVariable String e1,
+                                                       @PathVariable String e2) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, idFilial);
+        Equipamento maior = null;
+
+        if (filial != null) {
+            maior = filial.maiorArrecadacao(e1, e2);
+        }
+
+        return maior != null ? maior.gerarDTO() : null;
+    }
 }

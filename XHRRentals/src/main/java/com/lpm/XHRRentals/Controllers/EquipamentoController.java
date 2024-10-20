@@ -1,81 +1,73 @@
 package com.lpm.XHRRentals.Controllers;
 
-import java.time.LocalDate;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.lpm.XHRRentals.Models.Aluguel;
 import com.lpm.XHRRentals.Models.Equipamento;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/equipamentos")
 public class EquipamentoController {
 
-  @PersistenceUnit
-  EntityManagerFactory factory;
+    @PersistenceUnit
+    EntityManagerFactory factory;
 
-  @PostMapping
-  public @ResponseBody Equipamento cadastrarEquipamento(@RequestParam String descricao,
-      @RequestParam double diaria,
-      @RequestParam int duracao,
-      @RequestParam double desconto) {
-    EntityManager manager = factory.createEntityManager();
+    @PostMapping
+    public @ResponseBody Equipamento cadastrarEquipamento(@RequestParam String descricao,
+                                                          @RequestParam double diaria,
+                                                          @RequestParam int duracao,
+                                                          @RequestParam double desconto) {
+        EntityManager manager = factory.createEntityManager();
 
-    Equipamento novoEquipamento = new Equipamento(descricao, diaria, duracao, desconto);
+        Equipamento novoEquipamento = new Equipamento(descricao, diaria, duracao, desconto);
 
-    manager.getTransaction().begin();
-    manager.persist(novoEquipamento);
-    manager.getTransaction().commit();
+        manager.getTransaction().begin();
+        manager.persist(novoEquipamento);
+        manager.getTransaction().commit();
 
-    return novoEquipamento;
-  }
-
-  @PutMapping("/alugar/{id}/{inicio}/{duracao}")
-  public @ResponseBody Aluguel alugarEquipamento(@PathVariable int id, 
-                                                 @PathVariable LocalDate inicio,
-                                                 @PathVariable int duracao) {
-    EntityManager manager = factory.createEntityManager();
-    Equipamento equipamento = manager.find(Equipamento.class, id);
-    Aluguel aluguel = null;
-    if (equipamento != null) {
-      aluguel = equipamento.alugar(inicio, duracao);
-      manager.getTransaction().begin();
-      manager.persist(aluguel);
-      manager.persist(equipamento);
-      manager.getTransaction().commit();
+        return novoEquipamento;
     }
-    return aluguel;
-  }
 
-  @GetMapping("/{id}")
-  public @ResponseBody Equipamento buscarEquipamento(@PathVariable int id) {
-    EntityManager manager = factory.createEntityManager();
-    Equipamento equipamento = manager.find(Equipamento.class, id);
-    return equipamento;
-  }
+    @PutMapping("/alugar/{id}/{inicio}/{duracao}")
+    public @ResponseBody Aluguel alugarEquipamento(@PathVariable int id,
+                                                   @PathVariable LocalDate inicio,
+                                                   @PathVariable int duracao) {
+        EntityManager manager = factory.createEntityManager();
+        Equipamento equipamento = manager.find(Equipamento.class, id);
+        Aluguel aluguel = null;
+        if (equipamento != null) {
+            aluguel = equipamento.alugar(inicio, duracao);
+            manager.getTransaction().begin();
+            manager.persist(aluguel);
+            manager.persist(equipamento);
+            manager.getTransaction().commit();
+        }
+        return aluguel;
+    }
 
-  @GetMapping("/relatorio/{id}")
-  public @ResponseBody String relatorioEquipamento(@PathVariable int id) {
-    EntityManager manager = factory.createEntityManager();
-    Equipamento equipamento = manager.find(Equipamento.class, id);
-    return equipamento.relatorioAlugueis();
-  }
+    @GetMapping("/{id}")
+    public @ResponseBody Equipamento buscarEquipamento(@PathVariable int id) {
+        EntityManager manager = factory.createEntityManager();
+        Equipamento equipamento = manager.find(Equipamento.class, id);
+        return equipamento;
+    }
 
-  @GetMapping("/arrecadacao/{id}")
-  public @ResponseBody double totalArrecadado(@PathVariable int id) {
-    EntityManager manager = factory.createEntityManager();
-    Equipamento equipamento = manager.find(Equipamento.class, id);
-    return equipamento.totalArrecadado();
-  }
+    @GetMapping("/relatorio/{id}")
+    public @ResponseBody String relatorioEquipamento(@PathVariable int id) {
+        EntityManager manager = factory.createEntityManager();
+        Equipamento equipamento = manager.find(Equipamento.class, id);
+        return equipamento.relatorioAlugueis();
+    }
+
+    @GetMapping("/arrecadacao/{id}")
+    public @ResponseBody double totalArrecadado(@PathVariable int id) {
+        EntityManager manager = factory.createEntityManager();
+        Equipamento equipamento = manager.find(Equipamento.class, id);
+        return equipamento.totalArrecadado();
+    }
 }
