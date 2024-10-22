@@ -25,7 +25,6 @@ public class FilialController {
         Filial filial = new Filial(nome);
 
         manager.getTransaction().begin();
-        ;
         manager.persist(filial);
         manager.getTransaction().commit();
 
@@ -79,11 +78,26 @@ public class FilialController {
         return maior != null ? maior.gerarDTO() : null;
     }
 
+    @GetMapping("{id}/equipamentos/{descricao}")
+    public @ResponseBody EquipamentoDTO buscarEquipamento(@PathVariable Long id,
+                                                          @PathVariable String descricao) {
+        EntityManager manager = factory.createEntityManager();
+        Filial filial = manager.find(Filial.class, id);
+        Equipamento equipamento = null;
+
+        if (filial != null) {
+            equipamento = filial.buscarEquipamento(descricao);
+        }
+
+        return equipamento != null ? equipamento.gerarDTO() : null;
+    }
+
     @GetMapping("/{id}/relatorio")
     public @ResponseBody String relatorio(@PathVariable Long id) {
         EntityManager manager = factory.createEntityManager();
         Filial filial = manager.find(Filial.class, id);
         String relatorio = "";
+
         if (filial != null) {
             relatorio = filial.relatorioFilial();
         }
