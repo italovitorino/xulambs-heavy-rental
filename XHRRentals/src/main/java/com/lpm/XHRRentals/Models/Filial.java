@@ -3,6 +3,7 @@ package com.lpm.XHRRentals.Models;
 import com.lpm.XHRRentals.DTO.FilialDTO;
 import jakarta.persistence.*;
 
+import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,9 +118,14 @@ public class Filial {
      * @return uma string formatada contendo o relatório da filial.
      */
     public String relatorioFilial() {
+        NumberFormat moeda = NumberFormat.getCurrencyInstance();
         StringBuilder relatFilial = new StringBuilder();
+        Equipamento equipamento = maiorArrecadacao();
+
         relatFilial.append(String.format("ID: %d\n", id));
-        relatFilial.append(String.format("Filial: %s", nomeFilial));
+        relatFilial.append(String.format("Filial: %s\n", nomeFilial));
+        relatFilial.append(String.format("Maior arrecadação: %s - %s\n", equipamento.getDescricao(), moeda.format(equipamento.totalArrecadado())));
+        relatFilial.append(String.format("Total de equipamentos: %d", equipamentos.size()));
 
         return relatFilial.toString();
     }
