@@ -54,7 +54,7 @@ public class Filial {
     }
 
     /**
-     * Busca um equipamento na lista de equipamentos da filial, com base em sua descrição (case-sensitive).
+     * Busca um equipamento na lista de equipamentos da filial, com base em sua descrição.
      *
      * @param descricao a descrição do equipamento procurado.
      * @return o equipamento encontrado com a descrição correspondente ou {@code null} se não for localizado.
@@ -104,7 +104,7 @@ public class Filial {
         Equipamento e2 = buscarEquipamento(equipamento2);
         Equipamento maior = e1;
 
-        if (e2 != null && e2.totalArrecadado() > e1.totalArrecadado()) {
+        if (e2 != null && (maior == null || e2.totalArrecadado() > maior.totalArrecadado())) {
             maior = e2;
         }
 
