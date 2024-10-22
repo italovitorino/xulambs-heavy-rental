@@ -63,7 +63,7 @@ public class Filial {
         Equipamento equipamento = null;
 
         for (Equipamento e : equipamentos) {
-            if (e.getDescricao().equals(descricao)) {
+            if (e.getDescricao().toLowerCase().equals(descricao.toLowerCase())) {
                 equipamento = e;
             }
         }
