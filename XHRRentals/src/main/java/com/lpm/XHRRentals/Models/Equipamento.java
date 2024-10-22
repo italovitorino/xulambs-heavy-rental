@@ -206,6 +206,6 @@ public class Equipamento {
     }
 
     public EquipamentoDTO gerarDTO() {
-        return new EquipamentoDTO(idEquipamento, descricao, duracaoMaxima, valorDiaria, descontoSemanal, totalArrecadado, filial.gerarDTO());
+        return new EquipamentoDTO(idEquipamento, descricao, duracaoMaxima, valorDiaria, descontoSemanal, totalArrecadado, filial == null ? null : filial.gerarDTO());
     }
 }
