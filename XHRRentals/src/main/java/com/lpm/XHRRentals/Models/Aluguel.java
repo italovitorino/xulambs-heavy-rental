@@ -1,14 +1,10 @@
 package com.lpm.XHRRentals.Models;
 
+import com.lpm.XHRRentals.DTO.AluguelDTO;
+import jakarta.persistence.*;
+
 import java.text.NumberFormat;
 import java.time.LocalDate;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 /**
  * Representa um aluguel de um {@link Equipamento}, contendo informações sobre a data de
@@ -21,71 +17,76 @@ import jakarta.persistence.Table;
 @Table(name = "alugueis")
 public class Aluguel {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int idAluguel;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idAluguel;
 
-  private LocalDate inicioAluguel;
-  private int duracaoAluguel;
+    private LocalDate inicioAluguel;
+    private int duracaoAluguel;
 
-  @ManyToOne
-  private Equipamento equipamento;
-  
-  private double valorDiario;
+    @ManyToOne
+    private Equipamento equipamento;
 
-  public Aluguel(){}
+    private double valorDiario;
 
-  public Aluguel(Equipamento equipamento, LocalDate inicio, int duracao) {
-    this.inicioAluguel = inicio;
-    this.duracaoAluguel = duracao;
-    this.equipamento = equipamento;
-    this.valorDiario = equipamento.valorDiario(duracao);
-  }
+    public Aluguel() {
+    }
 
-  /**
-   * Calcula o valor total do aluguel.
-   * 
-   * @return O valor total do aluguel.
-   */
-  public double valorAluguel() {
-    return valorDiario * duracaoAluguel;
-  }
+    public Aluguel(Equipamento equipamento, LocalDate inicio, int duracao) {
+        this.inicioAluguel = inicio;
+        this.duracaoAluguel = duracao;
+        this.equipamento = equipamento;
+        this.valorDiario = equipamento.valorDiario(duracao);
+    }
 
-  /**
-   * Retorna uma string formata com os dados do aluguel, incluindo data de início,
-   * data de término, valor da diária e valor total do aluguel.
-   * 
-   * @return Uma string com os dados do aluguel.
-   */
-  public String relatorio() {
-    NumberFormat moeda = NumberFormat.getCurrencyInstance();
-    StringBuilder relatorio = new StringBuilder();
+    /**
+     * Calcula o valor total do aluguel.
+     *
+     * @return O valor total do aluguel.
+     */
+    public double valorAluguel() {
+        return valorDiario * duracaoAluguel;
+    }
 
-    relatorio.append(String.format("Início: %s\n", inicioAluguel));
-    relatorio.append(String.format("Término: %s\n", inicioAluguel.plusDays(duracaoAluguel)));
-    relatorio.append(String.format("Valor diária: %s\n", moeda.format(valorDiario)));
-    relatorio.append(String.format("Total a pagar: %s", moeda.format(valorAluguel())));
+    /**
+     * Retorna uma string formata com os dados do aluguel, incluindo data de início,
+     * data de término, valor da diária e valor total do aluguel.
+     *
+     * @return Uma string com os dados do aluguel.
+     */
+    public String relatorio() {
+        NumberFormat moeda = NumberFormat.getCurrencyInstance();
+        StringBuilder relatorio = new StringBuilder();
 
-    return relatorio.toString();
-  }
+        relatorio.append(String.format("Início: %s\n", inicioAluguel));
+        relatorio.append(String.format("Término: %s\n", inicioAluguel.plusDays(duracaoAluguel)));
+        relatorio.append(String.format("Valor diária: %s\n", moeda.format(valorDiario)));
+        relatorio.append(String.format("Total a pagar: %s", moeda.format(valorAluguel())));
 
-  /**
-   * Verifica se a data especificada está dentro do período de aluguel,
-   * considerando a data de início e a duração.
-   * 
-   * @param data A data a ser verificada.
-   * @return {@code true} se a data estiver dentro do intervalo do aluguel,
-   *         {@code false} caso contrário.
-   */
-  public boolean incluiData(LocalDate data) {
-    if (inicioAluguel == null)
-      return false;
+        return relatorio.toString();
+    }
 
-    LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel - 1);
-    return !data.isBefore(inicioAluguel) && !data.isAfter(fimAluguel);
-  }
+    /**
+     * Verifica se a data especificada está dentro do período de aluguel,
+     * considerando a data de início e a duração.
+     *
+     * @param data A data a ser verificada.
+     * @return {@code true} se a data estiver dentro do intervalo do aluguel,
+     * {@code false} caso contrário.
+     */
+    public boolean incluiData(LocalDate data) {
+        if (inicioAluguel == null)
+            return false;
 
-  public String getRelatorio() {
-    return relatorio();
-  }
+        LocalDate fimAluguel = inicioAluguel.plusDays(duracaoAluguel - 1);
+        return !data.isBefore(inicioAluguel) && !data.isAfter(fimAluguel);
+    }
+
+    public String getRelatorio() {
+        return relatorio();
+    }
+
+    public AluguelDTO gerarDTO() {
+        return new AluguelDTO(idAluguel, inicioAluguel, duracaoAluguel, equipamento.gerarDTO(), valorDiario);
+    }
 }
