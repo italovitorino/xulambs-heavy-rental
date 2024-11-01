@@ -44,7 +44,7 @@ public class Equipamento {
     this.id = ++ultimoId;
     this.historico = new Aluguel[TAM_MAX_HISTORICO];
     this.posHistorico = 0;
-    this.descricao = (descricao.length() >= 5) ? descricao : "Equipamento";
+    this.descricao = (descricao.length() >= 5) ? descricao : descricao + id;
     this.duracaoMaxima = duracaoMaxima > 0 ? duracaoMaxima : 7;
     this.valorDiaria = diaria > 0 ? diaria : 10d;
     this.descontoSemanal = desconto >= 0 ? desconto <= 10 ? desconto / 100 : 0d : 0d;
@@ -143,6 +143,7 @@ public class Equipamento {
     NumberFormat moeda = NumberFormat.getCurrencyInstance();
     StringBuilder relatEquipamento = new StringBuilder();
 
+    relatEquipamento.append(String.format("ID: %d\n", id));
     relatEquipamento.append(String.format("Descrição: %s\n", descricao));
     relatEquipamento.append(String.format("Valor da diária: %s\n", moeda.format(valorDiaria)));
     relatEquipamento.append(String.format("Desconto semanal: %.2f%%\n", descontoSemanal * 100));
