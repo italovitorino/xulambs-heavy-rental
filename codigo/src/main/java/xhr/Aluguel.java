@@ -22,7 +22,7 @@ public class Aluguel {
     this.inicioAluguel = inicio;
     this.duracaoAluguel = duracao;
     this.equipamento = equipamento;
-    this.valorDiario = equipamento.valorDiario(duracao);
+    this.valorDiario = this.equipamento.valorDiario(duracao);
   }
 
   /**
