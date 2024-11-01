@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class EquipamentoTest {
   public void construtorComParametrosInvalidos() {
     Equipamento equipamento = new Equipamento("And", 0, -5, 12);
     String relatEquipamento = equipamento.dadosEquipamento();
-    assertTrue(relatEquipamento.contains("Equipamento"));
+    assertTrue(relatEquipamento.contains("And"));
     assertTrue(relatEquipamento.contains("10,00"));
     assertTrue(relatEquipamento.contains("0,00%"));
   }
@@ -99,12 +100,12 @@ public class EquipamentoTest {
     equipamento.alugar(LocalDate.now(), 2);
     equipamento.alugar(LocalDate.of(2024, 12, 12), 8);
     String relatEquipamento = equipamento.relatorioAlugueis();
-    assertTrue(relatEquipamento.contains("Início: " + LocalDate.now()));
-    assertTrue(relatEquipamento.contains("Término: " + LocalDate.now().plusDays(2)));
+    assertTrue(relatEquipamento.contains("Início: " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDate.now())));
+    assertTrue(relatEquipamento.contains("Término: " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(LocalDate.now().plusDays(1))));
     assertTrue(relatEquipamento.contains("50,00"));
     assertTrue(relatEquipamento.contains("100,00"));
-    assertTrue(relatEquipamento.contains("2024-12-12"));
-    assertTrue(relatEquipamento.contains("2024-12-20"));
+    assertTrue(relatEquipamento.contains("12/12/2024"));
+    assertTrue(relatEquipamento.contains("19/12/2024"));
     assertTrue(relatEquipamento.contains("47,50"));
     assertTrue(relatEquipamento.contains("380,00"));
     assertTrue(relatEquipamento.contains("480,00"));

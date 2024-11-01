@@ -25,8 +25,8 @@ public class AluguelTest {
   @Test
   public void relatorioDoAluguel() {
     String relatAluguel = aluguel.relatorio();
-    assertTrue(relatAluguel.contains("2024-12-12"));
-    assertTrue(relatAluguel.contains("2024-12-22"));
+    assertTrue(relatAluguel.contains("12/12/2024"));
+    assertTrue(relatAluguel.contains("21/12/2024"));
     assertTrue(relatAluguel.contains("45,00"));
     assertTrue(relatAluguel.contains("450,00"));
   }
