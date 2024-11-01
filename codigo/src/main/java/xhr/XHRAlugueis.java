@@ -41,6 +41,38 @@ public class XHRAlugueis {
     return null;
   }
 
+  private static void lerDadosAlugueis(Scanner dados, List<Equipamento> equipamentos) throws FileNotFoundException {
+    String linha = dados.nextLine();
+    Equipamento equipamento = null;
+
+    while (!linha.equals(FIM_ARQ)) {
+      String detalhes[] = linha.split(";");
+      equipamento = localizarEquipamento(detalhes[0], equipamentos);
+      equipamento.alugar(LocalDate.parse(detalhes[1], FORMATO_DATA), Integer.parseInt(detalhes[2]));
+      linha = dados.nextLine();
+    }
+  }
+
+  private static List<Equipamento> lerEquipamentos(String nomeArq) throws FileNotFoundException {
+    Scanner dados = new Scanner(new File(nomeArq));
+    String linha;
+    int quantidade = Integer.parseInt(dados.nextLine());
+    List<Equipamento> equipamentos = new LinkedList<>();
+
+    for (int i = 0; i < quantidade; i++) {
+      linha = dados.nextLine();
+      String[] detalhes = linha.split(";");
+      equipamentos.add(new Equipamento(detalhes[0], 
+                           Double.parseDouble(detalhes[1]), 
+                           Integer.parseInt(detalhes[2]),
+                           Double.parseDouble(detalhes[3])));
+    }
+
+    lerDadosAlugueis(dados, equipamentos);
+    dados.close();
+    return equipamentos;
+  }
+
   private static boolean descricaoExistente(String descricao, List<Equipamento> equipamentos) {
     for (Equipamento equipamento : equipamentos) {
       if (equipamento.getDescricao().equalsIgnoreCase(descricao)) {
@@ -72,6 +104,12 @@ public class XHRAlugueis {
     return new Equipamento(descricao, valorDiaria, duracaoMaxima, descontoSemanal);
   }
 
+  private static void listarEquipamentos(List<Equipamento> equipamentos) {
+    for (Equipamento equipamento : equipamentos) {
+      System.out.println(equipamento.dadosEquipamento());
+    }
+  }
+
   private static Equipamento pesquisarEquipamento(List<Equipamento> equipamentos) {
     String descricao;
     
@@ -92,44 +130,6 @@ public class XHRAlugueis {
     duracaoAluguel = Integer.parseInt(SCANNER.nextLine());
     
     return equipamento.alugar(inicio, duracaoAluguel);
-  }
-
-  private static List<Equipamento> lerEquipamentos(String nomeArq) throws FileNotFoundException {
-    Scanner dados = new Scanner(new File(nomeArq));
-    String linha;
-    int quantidade = Integer.parseInt(dados.nextLine());
-    List<Equipamento> equipamentos = new LinkedList<>();
-
-    for (int i = 0; i < quantidade; i++) {
-      linha = dados.nextLine();
-      String[] detalhes = linha.split(";");
-      equipamentos.add(new Equipamento(detalhes[0], 
-                           Double.parseDouble(detalhes[1]), 
-                           Integer.parseInt(detalhes[2]),
-                           Double.parseDouble(detalhes[3])));
-    }
-
-    lerDadosAlugueis(dados, equipamentos);
-    dados.close();
-    return equipamentos;
-  }
-
-  private static void lerDadosAlugueis(Scanner dados, List<Equipamento> equipamentos) throws FileNotFoundException {
-    String linha = dados.nextLine();
-    Equipamento equipamento = null;
-
-    while (!linha.equals(FIM_ARQ)) {
-      String detalhes[] = linha.split(";");
-      equipamento = localizarEquipamento(detalhes[0], equipamentos);
-      equipamento.alugar(LocalDate.parse(detalhes[1], FORMATO_DATA), Integer.parseInt(detalhes[2]));
-      linha = dados.nextLine();
-    }
-  }
-
-  private static void listarEquipamentos(List<Equipamento> equipamentos) {
-    for (Equipamento equipamento : equipamentos) {
-      System.out.println(equipamento.dadosEquipamento());
-    }
   }
 
   private static Equipamento maiorArrecadacao(List<Equipamento> equipamentos) {
