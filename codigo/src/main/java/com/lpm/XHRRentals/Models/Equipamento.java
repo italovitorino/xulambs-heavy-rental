@@ -85,7 +85,11 @@ public class Equipamento {
         this.filial = filial;
     }
 
-    public Filial getFilial() { return filial; };
+    public Filial getFilial() {
+        return filial;
+    }
+
+    ;
 
     /**
      * Verifica se o equipamento está disponível para locação em uma data
