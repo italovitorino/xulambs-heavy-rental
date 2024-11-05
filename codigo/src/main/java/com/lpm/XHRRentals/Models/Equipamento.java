@@ -174,8 +174,10 @@ public class Equipamento {
         NumberFormat moeda = NumberFormat.getCurrencyInstance();
         StringBuilder relatEquipamento = new StringBuilder();
 
+        relatEquipamento.append(String.format("ID: %d\n", id));
         relatEquipamento.append(String.format("Descrição: %s\n", descricao));
         relatEquipamento.append(String.format("Valor da diária: %s\n", moeda.format(valorDiaria)));
+        relatEquipamento.append(String.format("Duração máxima: %d\n", duracaoMaxima));
         relatEquipamento.append(String.format("Desconto semanal: %.2f%%\n", descontoSemanal * 100));
         relatEquipamento.append(String.format("Total arrecadado: %s\n", moeda.format(totalArrecadado)));
 
@@ -192,10 +194,6 @@ public class Equipamento {
     public String relatorioAlugueis() {
         NumberFormat moeda = NumberFormat.getCurrencyInstance();
         StringBuilder relatAlugueis = new StringBuilder();
-
-        relatAlugueis.append("-------------------------\n");
-        relatAlugueis.append("| Histórico de Aluguéis |\n");
-        relatAlugueis.append("-------------------------\n");
 
         for (int i = 0; i < historico.size(); i++) {
             Aluguel aluguel = historico.get(i);

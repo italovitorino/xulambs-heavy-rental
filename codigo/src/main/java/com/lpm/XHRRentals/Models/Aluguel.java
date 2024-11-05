@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Representa um aluguel de um {@link Equipamento}, contendo informações sobre a data de
@@ -58,8 +59,8 @@ public class Aluguel {
         NumberFormat moeda = NumberFormat.getCurrencyInstance();
         StringBuilder relatorio = new StringBuilder();
 
-        relatorio.append(String.format("Início: %s\n", inicioAluguel));
-        relatorio.append(String.format("Término: %s\n", inicioAluguel.plusDays(duracaoAluguel)));
+        relatorio.append(String.format("Início: %s\n", DateTimeFormatter.ofPattern("dd/MM/yyyy").format(inicioAluguel)));
+        relatorio.append(String.format("Término: %s\n", DateTimeFormatter.ofPattern("dd/MM/yyyy").format(inicioAluguel.plusDays(duracaoAluguel - 1))));
         relatorio.append(String.format("Valor diária: %s\n", moeda.format(valorDiario)));
         relatorio.append(String.format("Total a pagar: %s", moeda.format(valorAluguel())));
 
